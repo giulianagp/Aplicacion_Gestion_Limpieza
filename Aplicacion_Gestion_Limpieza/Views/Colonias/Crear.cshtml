@@ -1,0 +1,71 @@
+@model Aplicacion_Gestion_Limpieza.Models.Colonia
+
+@{
+    ViewData["Title"] = "Nueva colonia";
+}
+
+<h1>Registrar colonia</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <form asp-action="Crear" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label">
+                    Nombre de la colonia
+                </label>
+
+                <input asp-for="Nombre" class="form-control" />
+
+                <span asp-validation-for="Nombre"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CodigoPostal" class="form-label">
+                    Código postal
+                </label>
+
+                <input asp-for="CodigoPostal"
+                       class="form-control"
+                       maxlength="5" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Municipio" class="form-label">
+                    Municipio
+                </label>
+
+                <input asp-for="Municipio"
+                       class="form-control"
+                       value="Saltillo" />
+
+                <span asp-validation-for="Municipio"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Estado</label>
+
+                <select asp-for="Estado" class="form-select">
+                    <option value="true">Activa</option>
+                    <option value="false">Inactiva</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Guardar colonia
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+
+        </form>
+
+    </div>
+</div> 
