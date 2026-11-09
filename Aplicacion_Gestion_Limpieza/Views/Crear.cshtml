@@ -1,0 +1,127 @@
+﻿@model Aplicacion_Gestion_Limpieza.Models.ActividadCrearViewModel
+
+@{
+    ViewData["Title"] = "Nueva actividad";
+}
+
+<h1>Registrar actividad de limpieza</h1>
+
+<p class="text-muted">
+    Captura los datos de la actividad y selecciona la cuadrilla y las colonias correspondientes.
+</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <form asp-action="Crear" method="post">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <h5 class="mb-3">Información general</h5>
+
+            <div class="mb-3">
+                <label asp-for="Titulo" class="form-label">Título de la actividad</label>
+                <input asp-for="Titulo" class="form-control" placeholder="Ej. Limpieza de calles" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label">Descripción</label>
+                <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaActividad" class="form-label">Fecha</label>
+                    <input asp-for="FechaActividad" type="date" class="form-control" />
+                    <span asp-validation-for="FechaActividad" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="HoraInicio" class="form-label">Hora de inicio</label>
+                    <input asp-for="HoraInicio" type="time" class="form-control" />
+                    <span asp-validation-for="HoraInicio" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="HoraFin" class="form-label">Hora de finalización</label>
+                    <input asp-for="HoraFin" type="time" class="form-control" />
+                </div>
+            </div>
+
+            <hr />
+
+            <h5 class="mb-3">Asignación del trabajo</h5>
+
+            <div class="mb-3">
+                <label asp-for="IdCuadrilla" class="form-label">Cuadrilla responsable</label>
+
+                <select asp-for="IdCuadrilla" class="form-select">
+                    <option value="">Selecciona una cuadrilla</option>
+
+                    @foreach (var cuadrilla in ViewBag.Cuadrillas)
+                    {
+                        <option value="@cuadrilla.IdCuadrilla">
+                            @cuadrilla.Nombre
+                        </option>
+                    }
+                </select>
+
+                <span asp-validation-for="IdCuadrilla" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Colonias donde se realizará la actividad</label>
+                <span asp-validation-for="ColoniasSeleccionadas"
+                      class="text-danger"></span>
+                @if (ViewBag.Colonias.Count > 0)
+                {
+                    <div class="border rounded p-3">
+
+                        @foreach (var colonia in ViewBag.Colonias)
+                        {
+                            <div class="form-check mb-2">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="ColoniasSeleccionadas"
+                                       value="@colonia.IdColonia"
+                                       id="colonia_@colonia.IdColonia" />
+
+                                <label class="form-check-label"
+                                       for="colonia_@colonia.IdColonia">
+                                    @colonia.Nombre (@colonia.CodigoPostal)
+                                </label>
+                            </div>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        No hay colonias activas registradas.
+                    </div>
+                }
+            </div>
+
+            <hr />
+
+            <div class="mb-3">
+                <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Guardar actividad
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+
+        </form>
+
+
+
+    </div>
+</div>

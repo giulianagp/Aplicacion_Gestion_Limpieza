@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Aplicacion_Gestion_Limpieza.Models.Actividad>
+
+@{
+    ViewData["Title"] = "Actividades de limpieza";
+}
+
+<h1>Actividades de limpieza</h1>
+
+<p class="text-muted">
+    Consulta y administra las actividades realizadas por las cuadrillas.
+</p>
+
+<div class="mb-3">
+    <a asp-controller="Actividades"
+       asp-action="Crear"
+       class="btn btn-primary">
+        + Nueva actividad
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+
+                    <thead>
+                        <tr>
+                            
+                            <th>ID</th>
+                            <th>Actividad</th>
+                            <th>Fecha</th>
+                            <th>Horario</th>
+                            <th>Cuadrilla</th>
+                            <th>Jefe responsable</th>
+                            <th>Colonias</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var actividad in Model)
+                        {
+                            <tr>
+                                <td>@actividad.IdActividad</td>
+                                <td>@actividad.Titulo</td>
+                                <td>
+                                    @actividad.FechaActividad.ToString("dd/MM/yyyy")
+                                </td>
+                                <td>
+                                    @actividad.HoraInicio.ToString(@"hh\:mm")
+                                    -
+                                    @(actividad.HoraFin?.ToString(@"hh\:mm") ?? "Pendiente")
+                                </td>
+                                <td>
+                                    @(actividad.Cuadrilla?.Nombre ?? "Sin cuadrilla")
+                                </td>
+                                <td>
+                                    @(actividad.Cuadrilla?.Jefe?.Nombre ?? "Sin jefe")
+                                    @(actividad.Cuadrilla?.Jefe?.ApellidoPaterno ?? "")
+                                </td>
+
+                                <td>
+                                    @if (actividad.ActividadColonias.Any())
+                                    {
+                                        @string.Join(", ",
+                                            actividad.ActividadColonias
+                                                .Select(ac => ac.Colonia?.Nombre)
+                                                .Where(nombre => nombre != null))
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin colonias</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @actividad.Estado
+                                </td>
+                                <td>
+                                    <a asp-action="Editar"
+                                       asp-route-id="@actividad.IdActividad"
+                                       class="btn btn-warning btn-sm">
+                                        Editar
+                                    </a>
+                                    @if (actividad.Estado != "Cancelada")
+                                    {
+                                        <form asp-action="Eliminar"
+                                              asp-route-id="@actividad.IdActividad"
+                                              method="post"
+                                              style="display:inline">
+
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('¿Deseas cancelar esta actividad?');">
+                                                Cancelar
+                                            </button>
+
+                                        </form>
+                                    }
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                Todavía no hay actividades registradas.
+            </div>
+        }
+
+    </div>
+</div>
