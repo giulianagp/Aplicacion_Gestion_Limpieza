@@ -1,0 +1,60 @@
+@model Aplicacion_Gestion_Limpieza.Models.Cuadrilla
+
+@{
+    ViewData["Title"] = "Nueva cuadrilla";
+}
+
+<h1>Registrar cuadrilla</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <form asp-action="Crear" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label">
+                    Nombre de la cuadrilla
+                </label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label">
+                    Descripción
+                </label>
+                <textarea asp-for="Descripcion"
+                          class="form-control"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="IdJefe" class="form-label">
+                    Jefe responsable
+                </label>
+
+                <select asp-for="IdJefe"
+                        asp-items="ViewBag.Jefes"
+                        class="form-select">
+                    <option value="">Selecciona un jefe</option>
+                </select>
+
+                <span asp-validation-for="IdJefe"
+                      class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Guardar cuadrilla
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+
+        </form>
+
+    </div>
+</div>
