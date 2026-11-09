@@ -1,0 +1,96 @@
+@model IEnumerable<Aplicacion_Gestion_Limpieza.Models.Colonia>
+
+@{
+    ViewData["Title"] = "Colonias";
+}
+
+<h1>Colonias de Saltillo</h1>
+
+<div class="mb-3">
+    <a asp-controller="Colonias"
+       asp-action="Crear"
+       class="btn btn-primary">
+        + Nueva colonia
+    </a>
+</div>
+
+<p>Administración de las zonas donde se realizan los servicios de limpieza.</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h5 class="card-title">Colonias registradas</h5>
+
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Código postal</th>
+                            <th>Municipio</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var colonia in Model)
+                        {
+                            <tr>
+                                <td>@colonia.IdColonia</td>
+                                <td>@colonia.Nombre</td>
+                                <td>@colonia.CodigoPostal</td>
+                                <td>@colonia.Municipio</td>
+                                <td>
+                                    @if (colonia.Estado)
+                                    {
+                                        <span class="badge bg-success">Activa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactiva</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-controller="Colonias"
+                                       asp-action="Editar"
+                                       asp-route-id="@colonia.IdColonia"
+                                       class="btn btn-warning btn-sm">
+                                        Editar
+                                    </a>
+
+                                    @if (colonia.Estado)
+                                    {
+                                        <form asp-controller="Colonias"
+                                              asp-action="Eliminar"
+                                              asp-route-id="@colonia.IdColonia"
+                                              method="post"
+                                              style="display:inline">
+
+                                            <button type="submit"
+                                                    class="btn btn-danger btn-sm"
+                                                    onclick="return confirm('¿Deseas dejar sin servocio esta colonia?')">
+                                                Desactivar
+                                            </button>
+
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                Todavía no hay colonias registradas.
+            </div>
+        }
+
+    </div>
+</div>
