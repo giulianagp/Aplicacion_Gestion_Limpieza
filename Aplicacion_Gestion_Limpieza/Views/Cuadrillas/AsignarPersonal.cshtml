@@ -1,0 +1,49 @@
+@model Aplicacion_Gestion_Limpieza.Models.PersonalCuadrilla
+
+@{
+    ViewData["Title"] = "Asignar personal";
+}
+
+<h1>Asignar trabajadores</h1>
+
+<p>
+    Cuadrilla: <strong>@ViewBag.NombreCuadrilla</strong>
+</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <form asp-action="AsignarPersonal" method="post">
+
+            <input type="hidden" asp-for="IdCuadrilla" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="IdPersonal" class="form-label">
+                    Seleccionar trabajador
+                </label>
+
+                <select asp-for="IdPersonal"
+                        asp-items="ViewBag.Personal"
+                        class="form-select">
+                    <option value="">Selecciona un trabajador</option>
+                </select>
+
+                <span asp-validation-for="IdPersonal"
+                      class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Asignar trabajador
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+
+        </form>
+
+    </div>
+</div>
