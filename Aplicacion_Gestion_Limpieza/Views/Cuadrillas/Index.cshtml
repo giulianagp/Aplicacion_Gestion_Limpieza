@@ -1,0 +1,114 @@
+@model IEnumerable<Aplicacion_Gestion_Limpieza.Models.Cuadrilla>
+
+@{
+    ViewData["Title"] = "Cuadrillas";
+}
+
+<h1>Cuadrillas de limpieza</h1>
+<div class="mb-3">
+    <a asp-controller="Cuadrillas"
+       asp-action="Crear"
+       class="btn btn-primary">
+        + Nueva cuadrilla
+    </a>
+</div>
+
+<p>Administración de los equipos de trabajo de la empresa.</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h5 class="card-title">Cuadrillas registradas</h5>
+
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Acciones</th>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Jefe responsable</th>
+                            <th>Fecha de creación</th>
+                            <th>Estado</th>
+                            <th>Personal asignado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var cuadrilla in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-action="AsignarPersonal"
+                                       asp-route-id="@cuadrilla.IdCuadrilla"
+                                       class="btn btn-primary btn-sm">
+                                        Asignar personal
+                                    </a>
+                                </td>
+                                <td>@cuadrilla.IdCuadrilla</td>
+                                <td>@cuadrilla.Nombre</td>
+                                <td>@cuadrilla.Descripcion</td>
+
+                                <td>
+                                    @if (cuadrilla.Jefe != null)
+                                    {
+                                        @cuadrilla.Jefe.Nombre
+                                        @cuadrilla.Jefe.ApellidoPaterno
+                                    }
+                                    else
+                                    {
+                                        <span>No asignado</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @cuadrilla.FechaCreacion.ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+                                    @if (cuadrilla.Estado)
+                                    {
+                                        <span class="badge bg-success">Activa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactiva</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (cuadrilla.PersonalCuadrilla != null &&
+                                         cuadrilla.PersonalCuadrilla.Any(p => p.Estado))
+                                    {
+                                        @foreach (var asignacion in cuadrilla.PersonalCuadrilla
+                                            .Where(p => p.Estado))
+                                        {
+                                            <div>
+                                                @asignacion.Personal?.Nombre
+                                                @asignacion.Personal?.ApellidoPaterno
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin trabajadores asignados</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                Todavía no hay cuadrillas registradas.
+            </div>
+        }
+
+    </div>
+</div>
