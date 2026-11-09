@@ -1,0 +1,341 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h1 class="fw-bold">Dashboard ejecutivo</h1>
+        <div class="mb-3">
+            <a asp-controller="Actividades"
+               asp-action="Crear"
+               class="btn btn-primary">
+                Registrar nueva actividad
+            </a>
+
+            <a asp-controller="Actividades"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+                Consultar actividades
+            </a>
+        </div>
+        <p class="text-muted">
+            Resumen general de las actividades de limpieza.
+        </p>
+    </div>
+
+    <!-- Tarjetas de indicadores -->
+    <div class="row g-4">
+
+        <div class="col-md-4 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Total de actividades</h6>
+                    <h2 class="fw-bold text-primary">
+                        @ViewBag.TotalActividades
+                    </h2>
+                    <p class="mb-0 small text-muted">
+                        Actividades registradas
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Actividades programadas</h6>
+                    <h2 class="fw-bold text-warning">
+                        @ViewBag.Programadas
+                    </h2>
+                    <p class="mb-0 small text-muted">
+                        Pendientes de realizar
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Actividades en proceso</h6>
+                    <h2 class="fw-bold text-info">
+                        @ViewBag.EnProceso
+                    </h2>
+                    <p class="mb-0 small text-muted">
+                        Trabajos en ejecución
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Actividades finalizadas</h6>
+                    <h2 class="fw-bold text-success">
+                        @ViewBag.Finalizadas
+                    </h2>
+                    <p class="mb-0 small text-muted">
+                        Trabajos completados
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Actividades canceladas</h6>
+                    <h2 class="fw-bold text-danger">
+                        @ViewBag.Canceladas
+                    </h2>
+                    <p class="mb-0 small text-muted">
+                        Trabajos cancelados
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Cuadrillas activas</h6>
+                    <h2 class="fw-bold text-secondary">
+                        @ViewBag.TotalCuadrillas
+                    </h2>
+                    <p class="mb-0 small text-muted">
+                        Equipos disponibles
+                    </p>
+
+                    <!-- Tarjeta de personal activo -->
+                    <div class="col-md-4 col-lg-4">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body">
+                                <h6 class="text-muted">Personal activo</h6>
+
+                                <h2 class="fw-bold text-primary">
+                                    @ViewBag.TotalPersonal
+                                </h2>
+
+                                <p class="mb-0 small text-muted">
+                                    Empleados registrados y activos
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Gráfica de actividades por cuadrilla -->
+    <div class="card shadow-sm border-0 mt-4">
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">
+                Actividades por cuadrilla
+            </h5>
+
+            <p class="text-muted small">
+                Cantidad de actividades registradas para cada equipo.
+            </p>
+
+            <canvas id="graficaCuadrillas" height="120"></canvas>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+            const datosCuadrillas = @Html.Raw(
+                            System.Text.Json.JsonSerializer.Serialize(ViewBag.ActividadesPorCuadrilla)
+                            );
+
+            const nombres = datosCuadrillas.map(d => d.NombreCuadrilla);
+            const cantidades = datosCuadrillas.map(d => d.TotalActividades);
+
+            const contexto = document.getElementById('graficaCuadrillas');
+
+            new Chart(contexto, {
+                type: 'bar',
+
+                data: {
+                    labels: nombres,
+
+                    datasets: [{
+                        label: 'Total de actividades',
+                        data: cantidades,
+                        backgroundColor: '#5e2e91',
+                        borderRadius: 6
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+    </script>
+
+    <!-- Gráfica de actividades por estado -->
+    <div class="card shadow-sm border-0 mt-4">
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">
+                Distribución de actividades por estado
+            </h5>
+
+            <p class="text-muted small">
+                Porcentaje de actividades según su situación actual.
+            </p>
+
+            <div style="max-width: 450px; margin: auto;">
+                <canvas id="graficaEstados"></canvas>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+            const datosEstados = @Html.Raw(
+                            System.Text.Json.JsonSerializer.Serialize(
+                            (object)ViewBag.ActividadesPorEstado
+                            )
+                            );
+
+            const nombresEstados = datosEstados.map(d => d.Estado);
+            const cantidadesEstados = datosEstados.map(d => d.Total);
+
+            const contextoEstados = document.getElementById('graficaEstados');
+
+            new Chart(contextoEstados, {
+                type: 'doughnut',
+
+                data: {
+                    labels: nombresEstados,
+
+                    datasets: [{
+                        data: cantidadesEstados,
+                        backgroundColor: [
+                            '#fdd835',
+                            '#5e2e91',
+                            '#28a745',
+                            '#dc3545'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+    </script>
+
+    
+    <!-- Tabla de actividades recientes -->
+    <div class="card shadow-sm border-0 mt-4 mb-4">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-3">
+                Actividades recientes
+            </h5>
+
+            <p class="text-muted small">
+                Últimos cinco trabajos registrados en el sistema.
+            </p>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Actividad</th>
+                            <th>Fecha</th>
+                            <th>Cuadrilla</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var actividad in ViewBag.ActividadesRecientes)
+                        {
+                            <tr>
+                                <td>@actividad.Titulo</td>
+
+                                <td>
+                                    @actividad.FechaActividad.ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+                                    @actividad.Cuadrilla?.Nombre
+                                </td>
+
+                                <td>
+                                    @if (actividad.Estado == "Programada")
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            Programada
+                                        </span>
+                                    }
+                                    else if (actividad.Estado == "En proceso")
+                                    {
+                                        <span class="badge bg-primary">
+                                            En proceso
+                                        </span>
+                                    }
+                                    else if (actividad.Estado == "Finalizada")
+                                    {
+                                        <span class="badge bg-success">
+                                            Finalizada
+                                        </span>
+                                    }
+                                    else if (actividad.Estado == "Cancelada")
+                                    {
+                                        <span class="badge bg-danger">
+                                            Cancelada
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
