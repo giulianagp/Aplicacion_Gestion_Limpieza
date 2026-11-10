@@ -1,0 +1,70 @@
+@model Aplicacion_Gestion_Limpieza.Models.Evidencia
+
+@{
+    ViewData["Title"] = "Subir evidencia";
+}
+
+<h1>Subir evidencia fotográfica</h1>
+
+<p class="text-muted">
+    Registra una fotografía del trabajo realizado y relaciónala con una actividad.
+</p>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <form asp-action="Crear" method="post" enctype="multipart/form-data">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Actividad relacionada</label>
+
+                <select name="IdActividad" class="form-select" required>
+                    <option value="">Selecciona una actividad</option>
+
+                    @foreach (var actividad in ViewBag.Actividades)
+                    {
+                        <option value="@actividad.IdActividad">
+                            @actividad.Titulo
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Fotografía</label>
+
+                <input type="file"
+                       name="Archivo"
+                       class="form-control"
+                       accept="image/jpeg,image/png,image/webp"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label">
+                    Descripción
+                </label>
+
+                <textarea asp-for="Descripcion"
+                          class="form-control"
+                          rows="3"
+                          placeholder="Describe el trabajo realizado..."></textarea>
+
+                <span asp-validation-for="Descripcion"
+                      class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Guardar evidencia
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancelar
+            </a>
+
+        </form>
+
+    </div>
+</div>
