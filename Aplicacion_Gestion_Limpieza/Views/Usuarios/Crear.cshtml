@@ -1,0 +1,138 @@
+@model Aplicacion_Gestion_Limpieza.Models.UsuarioCrearViewModel
+
+@{
+    ViewData["Title"] = "Registrar usuario";
+}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <h2>Registrar nuevo usuario</h2>
+        <p class="text-muted">
+            Completa los datos para crear una cuenta de acceso.
+        </p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+
+            <form asp-action="Crear" method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Nombre" class="form-label">
+                        Nombre completo
+                    </label>
+
+                    <input asp-for="Nombre"
+                           class="form-control"
+                           placeholder="Nombre del usuario" />
+
+                    <span asp-validation-for="Nombre"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Correo" class="form-label">
+                        Correo electrónico
+                    </label>
+
+                    <input asp-for="Correo"
+                           type="email"
+                           class="form-control"
+                           placeholder="usuario@ejemplo.com" />
+
+                    <span asp-validation-for="Correo"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">
+                        Contraseña
+                    </label>
+
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control"
+                           placeholder="Mínimo 8 caracteres" />
+
+                    <span asp-validation-for="Password"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmarPassword" class="form-label">
+                        Confirmar contraseña
+                    </label>
+
+                    <input asp-for="ConfirmarPassword"
+                           type="password"
+                           class="form-control"
+                           placeholder="Repite la contraseña" />
+
+                    <span asp-validation-for="ConfirmarPassword"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Rol" class="form-label">
+                        Tipo de usuario
+                    </label>
+
+                    <select asp-for="Rol" class="form-select">
+                        <option value="Personal">Personal</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+
+                    <span asp-validation-for="Rol"
+                          class="text-danger"></span>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="IdPersonal" class="form-label">
+                        Trabajador asociado
+                    </label>
+
+                    <select asp-for="IdPersonal" class="form-select">
+                        <option value="">Selecciona un trabajador</option>
+
+                        @if (ViewBag.Personal != null)
+                        {
+                            foreach (var persona in ViewBag.Personal)
+                            {
+                                <option value="@persona.IdPersonal">
+                                    @persona.Nombre @persona.ApellidoPaterno @persona.ApellidoMaterno
+                                </option>
+                            }
+                        }
+                    </select>
+
+                    <span asp-validation-for="IdPersonal"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit" class="btn btn-primary">
+                        Registrar usuario
+                    </button>
+
+                    <a asp-action="Index" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
