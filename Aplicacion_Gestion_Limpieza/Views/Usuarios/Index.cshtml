@@ -1,0 +1,124 @@
+@model IEnumerable<Aplicacion_Gestion_Limpieza.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Administración de usuarios";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Administración de usuarios</h2>
+            <p class="text-muted">
+                Consulta y administra las cuentas de acceso al sistema.
+            </p>
+        </div>
+
+        <a asp-controller="Usuarios"
+           asp-action="Crear"
+           class="btn btn-primary">
+            + Nuevo usuario
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var usuario in Model)
+                        {
+                            <tr>
+                                <td>@usuario.Nombre</td>
+                                <td>@usuario.Correo</td>
+                                <td>
+                                    @if (usuario.Rol == "Administrador")
+                                    {
+                                        <span class="badge bg-primary">
+                                            Administrador
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            Personal
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (usuario.Estado)
+                                    {
+                                        <span class="badge bg-success">
+                                            Activo
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">
+                                            Inactivo
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    <form asp-action="CambiarEstado"
+                                          method="post"
+                                          onsubmit="return confirm('¿Deseas cambiar el estado de este usuario?');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@usuario.IdUsuario" />
+
+                                        <button type="submit"
+                                                class="btn btn-sm @(usuario.Estado ? "btn-outline-danger" : "btn-outline-success")">
+
+                                            @(usuario.Estado ? "Desactivar" : "Activar")
+
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <p class="text-center text-muted">
+                    No hay usuarios registrados.
+                </p>
+            }
+
+        </div>
+    </div>
+
+</div>
