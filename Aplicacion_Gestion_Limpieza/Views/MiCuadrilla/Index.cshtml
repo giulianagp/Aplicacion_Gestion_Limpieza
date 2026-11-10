@@ -1,0 +1,90 @@
+@model IEnumerable<Aplicacion_Gestion_Limpieza.Models.Cuadrilla>
+
+@{
+    ViewData["Title"] = "Mi cuadrilla";
+}
+
+<div class="container mt-4">
+
+    <h2>Mi cuadrilla</h2>
+
+    <p class="text-muted">
+        Consulta la información de las cuadrillas a las que perteneces.
+    </p>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Actualmente no estás asignado a ninguna cuadrilla.
+        </div>
+    }
+    else
+    {
+        @foreach (var cuadrilla in Model)
+        {
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">@cuadrilla.Nombre</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <p>
+                        <strong>Descripción:</strong>
+                        @cuadrilla.Descripcion
+                    </p>
+
+                    <p>
+                        <strong>Jefe de cuadrilla:</strong>
+                        @cuadrilla.Jefe?.Nombre
+                        @cuadrilla.Jefe?.ApellidoPaterno
+                        @cuadrilla.Jefe?.ApellidoMaterno
+                    </p>
+
+                    <p>
+                        <strong>Estado:</strong>
+                        @(cuadrilla.Estado ? "Activa" : "Inactiva")
+                    </p>
+
+                    <hr />
+
+                    <h6>Integrantes de la cuadrilla</h6>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Cargo</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var asignacion in cuadrilla.PersonalCuadrilla
+                                    .Where(pc => pc.Estado))
+                                {
+                                    <tr>
+                                        <td>
+                                            @asignacion.Personal.Nombre
+                                            @asignacion.Personal.ApellidoPaterno
+                                            @asignacion.Personal.ApellidoMaterno
+                                        </td>
+
+                                        <td>
+                                            @asignacion.Personal.Cargo
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        }
+    }
+
+</div>
