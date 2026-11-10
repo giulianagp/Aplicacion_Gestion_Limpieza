@@ -1,0 +1,57 @@
+@model IEnumerable<Aplicacion_Gestion_Limpieza.Models.Colonia>
+
+@{
+    ViewData["Title"] = "Mis colonias";
+}
+
+<div class="container mt-4">
+
+    <h2>Mis colonias asignadas</h2>
+
+    <p class="text-muted">
+        Consulta las colonias donde tu cuadrilla tiene actividades programadas.
+    </p>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Actualmente no tienes colonias asignadas.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var colonia in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm h-100">
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @colonia.Nombre
+                            </h5>
+
+                            <p class="card-text">
+                                <strong>Código postal:</strong>
+                                @colonia.CodigoPostal
+                            </p>
+
+                            <p class="card-text">
+                                <strong>Municipio:</strong>
+                                @colonia.Municipio
+                            </p>
+
+                            <span class="badge bg-success">
+                                Activa
+                            </span>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>
