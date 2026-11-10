@@ -1,0 +1,80 @@
+@model IEnumerable<Aplicacion_Gestion_Limpieza.Models.Evidencia>
+
+@{
+    ViewData["Title"] = "Evidencias";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Evidencias fotográficas</h1>
+        <p class="text-muted">
+            Consulta las fotografías de los trabajos de limpieza realizados.
+        </p>
+    </div>
+
+    <a asp-action="Crear" class="btn btn-primary">
+        Subir evidencia
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        @if (Model.Any())
+        {
+            <div class="row">
+                @foreach (var evidencia in Model)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+
+                            <img src="@evidencia.RutaArchivo"
+                                 class="card-img-top"
+                                 style="height:220px; object-fit:cover;"
+                                 alt="Fotografía de evidencia" />
+
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    @evidencia.NombreArchivo
+                                </h5>
+
+                                <p class="card-text">
+                                    @evidencia.Descripcion
+                                </p>
+
+                                <p class="text-muted small">
+                                    Actividad: @evidencia.Actividad?.Titulo
+                                </p>
+                                <form asp-action="Eliminar" method="post"
+                                      onsubmit="return confirm('¿Estás seguro de eliminar esta evidencia?');">
+
+                                    <input type="hidden" name="id" value="@evidencia.IdEvidencia" />
+
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        Eliminar evidencia
+                                    </button>
+
+                                </form>
+
+                                <p class="text-muted small">
+                                    Fecha: @evidencia.FechaSubida.ToString("dd/MM/yyyy")
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <h5>No hay evidencias registradas</h5>
+                <p class="text-muted">
+                    Cuando subas fotografías, aparecerán aquí.
+                </p>
+            </div>
+        }
+
+    </div>
+</div>
