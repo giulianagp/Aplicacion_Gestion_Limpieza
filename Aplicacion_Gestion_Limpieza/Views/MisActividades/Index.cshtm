@@ -1,0 +1,81 @@
+@model IEnumerable<Aplicacion_Gestion_Limpieza.Models.Actividad>
+
+@{
+    ViewData["Title"] = "Mis actividades";
+}
+
+<div class="container mt-4">
+
+    <h2>Mis actividades</h2>
+
+    <p class="text-muted">
+        Consulta las actividades asignadas a las cuadrillas
+        a las que perteneces.
+    </p>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Actualmente no tienes actividades asignadas.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Actividad</th>
+                        <th>Fecha</th>
+                        <th>Horario</th>
+                        <th>Cuadrilla</th>
+                        <th>Colonias</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var actividad in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@actividad.Titulo</strong>
+                                <br />
+                                <small class="text-muted">
+                                    @actividad.Descripcion
+                                </small>
+                            </td>
+
+                            <td>
+                                @actividad.FechaActividad.ToString("dd/MM/yyyy")
+                            </td>
+
+                            <td>
+                                @actividad.HoraInicio
+                                -
+                                @actividad.HoraFin
+                            </td>
+
+                            <td>
+                                @actividad.Cuadrilla?.Nombre
+                            </td>
+
+                            <td>
+                                @string.Join(", ",
+                                    actividad.ActividadColonias
+                                        .Select(ac => ac.Colonia.Nombre))
+                            </td>
+
+                            <td>
+                                @actividad.Estado
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    }
+
+</div>
