@@ -1,0 +1,75 @@
+@model IEnumerable<Aplicacion_Gestion_Limpieza.Models.Evidencia>
+
+@{
+    ViewData["Title"] = "Mis evidencias";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Mis evidencias</h2>
+            <p class="text-muted">
+                Consulta las fotografías registradas por las cuadrillas.
+            </p>
+        </div>
+
+        <a asp-action="Crear" class="btn btn-primary">
+            Subir evidencia
+        </a>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Todavía no hay evidencias registradas para tus cuadrillas.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @foreach (var evidencia in Model)
+            {
+                <div class="col-md-4 mb-4">
+
+                    <div class="card shadow-sm h-100">
+
+                        <img src="@evidencia.RutaArchivo"
+                             class="card-img-top"
+                             alt="Evidencia de limpieza"
+                             style="height:220px; object-fit:cover;" />
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @evidencia.Actividad?.Titulo
+                            </h5>
+
+                            <p class="card-text">
+                                @evidencia.Descripcion
+                            </p>
+
+                            <small class="text-muted">
+                                Fecha de registro:
+                                @evidencia.FechaSubida.ToString("dd/MM/yyyy HH:mm")
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
